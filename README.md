@@ -1,7 +1,7 @@
 # shebang.nvim
 
 A simple Neovim plugin written in Lua that automatically inserts a shebang line
-when editing a new file and make it executable.
+when editing a new file and makes it executable.
 
 ## Installation
 
@@ -34,25 +34,39 @@ If a file extension is present, the pluggin works automatically. A manual user c
 
 ## Customization
 
-You can set custom shells by setting the global variables `shebang_shells` and
-`shebang_commands`:
+You can set custom shebangs or override defaults in `setup` with `bins = { extension = binary }`, using either a binary command (which will be resolved with `/usr/bin/env`) or a full path:
 
-### vimscript
-```VimL
-let g:shebang_commands = { "py": "/usr/bin/python3.9" }
-let g:shebang_shells = { "py": "python3.9" }
-```
-
-### lua
 ```lua
-vim.g.shebang_commands = {
-    py = "/usr/bin/python3.9"
-}
-vim.g.shebang_shells = {
-    py = "python3.9"
-}
+require("shebang").setup({
+    bin = {
+        py = "python3.11",
+        ksh = "/usr/bin/ksh"
+    }
+})
 ```
 
-The difference between the two is that the executables in `shebang_shells` have
-must be in the `PATH` environment variable, while the in `shebang_commands` you
-can use full paths to the executable.
+Default options are:
+```lua
+{
+    bins = {
+        awk = "awk",
+        hs = "runhaskell",
+        jl = "julia",
+        lua = "lua",
+        m = "octave",
+        mak = "make",
+        php = "php",
+        pl = "perl",
+        py = "python3",
+        r = "Rscript",
+        rb = "ruby",
+        scala = "scala",
+        sh = "bash",
+        tcl = "tclsh",
+        tk = "wish",
+    },
+    automatic = true,       -- insert shebang on new file
+    command = true,         -- define Bang user command
+    executable = true,      -- make file executable on exit
+}
+```
