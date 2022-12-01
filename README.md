@@ -5,8 +5,18 @@ when editing a new file.
 
 ## Installation
 
-```VimL
-Plug 'samirettali/shebang.nvim'
+### [vim-plug](https://github.com/junegunn/vim-plug)
+```vim
+Plug "samirettali/shebang.nvim"
+lua require("shebang").setup()
+```
+
+### [packer](https://github.com/wbthomason/packer.nvim)
+```lua
+use {
+    "samirettali/shebang.nvim",
+    config = function() require("shebang").setup() end
+}
 ```
 
 ## Customization
@@ -16,17 +26,17 @@ You can set custom shells by setting the global variables `shebang_shells` and
 
 ### vimscript
 ```VimL
-let g:shebang_commands = { 'py': '/usr/bin/python3.9' }
-let g:shebang_shells = { 'py': 'python3.9' }
+let g:shebang_commands = { "py": "/usr/bin/python3.9" }
+let g:shebang_shells = { "py": "python3.9" }
 ```
 
 ### lua
 ```lua
 vim.g.shebang_commands = {
-    py = '/usr/bin/python3.9'
+    py = "/usr/bin/python3.9"
 }
 vim.g.shebang_shells = {
-    py = 'python3.9'
+    py = "python3.9"
 }
 ```
 

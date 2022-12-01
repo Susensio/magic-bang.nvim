@@ -1,3 +1,5 @@
+local M = {}
+
 local function get_var(var_name)
   s, v = pcall(function()
     return vim.api.nvim_get_var(var_name)
@@ -5,7 +7,9 @@ local function get_var(var_name)
   if s then return v else return nil end
 end
 
-local function insert_shebang()
+local shebang_grp = vim.api.nvim_create_augroup("shebang", { clear = true })
+
+M.insert_shebang = function()
     local shells = {
         awk = "awk",
         hs = "runhaskell",
@@ -47,6 +51,18 @@ local function insert_shebang()
     end
 end
 
-return {
-    insert_shebang = insert_shebang,
-}
+
+M.setup = function(opt)
+    vim.api.nvim_create_autocmd(
+        "BufNewFile",
+        { pattern = "*.*",
+          callback = function() M.insert_shebang() end,
+          desc = "Auto insert shebang when needed",
+          group = shebang_grp
+        }
+    )
+end
+
+
+
+return M
