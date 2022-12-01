@@ -44,10 +44,22 @@ M.insert_shebang = function()
     end
 
     if shebang ~= nil then
-        vim.cmd [[ autocmd BufWritePost *.* :autocmd VimLeave * :!chmod u+x % ]]
-        vim.api.nvim_put({"#!" .. shebang}, "", true, true)
-        vim.fn.append(1, '')
-        vim.fn.cursor(2, 0)
+        vim.api.nvim_win_set_cursor(0, {1,0})
+        vim.api.nvim_put({"#!" .. shebang, ""}, "", false, true)
+
+        vim.api.nvim_create_autocmd(
+            "BufWritePost",
+            { pattern = "*.*",
+              callback = function()
+                  first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+                  if first_line:sub(1,2) == "#!" then
+                      vim.cmd(":!chmod u+x %")
+                  end
+              end,
+              desc = "Make file executable if shebang still exists",
+              group = shebang_grp
+            }
+        )
     end
 end
 
