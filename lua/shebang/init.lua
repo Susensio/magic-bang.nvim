@@ -1,5 +1,7 @@
 local M = {}
 
+local shebang_grp = vim.api.nvim_create_augroup("shebang", { clear = true })
+
 local function get_var(var_name)
   s, v = pcall(function()
     return vim.api.nvim_get_var(var_name)
@@ -7,9 +9,15 @@ local function get_var(var_name)
   if s then return v else return nil end
 end
 
-local shebang_grp = vim.api.nvim_create_augroup("shebang", { clear = true })
 
-M.insert_shebang = function()
+local function exists_shebang()
+    first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+    if first_line:sub(1,2) == "#!" then
+        return true
+    end
+end
+
+M.insert_shebang = function(ext)
     local shells = {
         awk = "awk",
         hs = "runhaskell",
@@ -27,8 +35,10 @@ M.insert_shebang = function()
         tcl = "tclsh",
         tk = "wish",
     }
-
-    local ext = vim.fn.expand("%:e")
+    -- TODO change to check for vim.bo.filetype
+    if ext == nil or ext == "" then
+        ext = vim.fn.expand("%:e")
+    end
 
     local custom_commands = get_var('shebang_commands')
     local custom_shells = get_var('shebang_shells')
@@ -45,14 +55,18 @@ M.insert_shebang = function()
 
     if shebang ~= nil then
         vim.api.nvim_win_set_cursor(0, {1,0})
+
+        if exists_shebang() then
+            vim.api.nvim_del_current_line()
+        end
+
         vim.api.nvim_put({"#!" .. shebang, ""}, "", false, true)
 
         vim.api.nvim_create_autocmd(
             "BufWritePost",
             { pattern = "*.*",
               callback = function()
-                  first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
-                  if first_line:sub(1,2) == "#!" then
+                  if exists_shebang() then
                       vim.cmd(":!chmod u+x %")
                   end
               end,
@@ -73,8 +87,15 @@ M.setup = function(opt)
           group = shebang_grp
         }
     )
-end
 
+    vim.api.nvim_create_user_command(
+        "Bang",
+        function(opts) M.insert_shebang(opts.args) end,
+        { desc = "Insert shebang and make executable",
+          nargs = "?",
+        }
+    )
+end
 
 
 return M
