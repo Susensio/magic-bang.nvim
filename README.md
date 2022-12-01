@@ -7,14 +7,14 @@ when editing a new file and make it executable.
 
 ### [vim-plug](https://github.com/junegunn/vim-plug)
 ```vim
-Plug "samirettali/shebang.nvim"
+Plug "susensio/shebang.nvim"
 lua require("shebang").setup()
 ```
 
 ### [packer](https://github.com/wbthomason/packer.nvim)
 ```lua
 use {
-    "samirettali/shebang.nvim",
+    "susensio/shebang.nvim",
     config = function() require("shebang").setup() end
 }
 ```
