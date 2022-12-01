@@ -56,3 +56,10 @@ vim.g.shebang_shells = {
 The difference between the two is that the executables in `shebang_shells` have
 must be in the `PATH` environment variable, while the in `shebang_commands` you
 can use full paths to the executable.
+
+## FAQ
+
+**Q:** How does it differ from forked [samirettali/shebang.nvim](https://github.com/samirettali/shebang.nvim)?
+
+**A:** First, it only makes a file executable if the shebang is still present on exist. This prevent _false positives_. Second, a `:Bang` user command can manually add a shebang, helping with _false negatives_.
+
