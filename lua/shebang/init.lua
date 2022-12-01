@@ -2,7 +2,7 @@ local M = {}
 
 local shebang_grp = vim.api.nvim_create_augroup("shebang", { clear = true })
 
-local config = {
+M.config = {
     bins = {
         awk = "awk",
         hs = "runhaskell",
@@ -40,7 +40,7 @@ M.insert_shebang = function(ext)
         ext = vim.fn.expand("%:e")
     end
 
-    local shebang = config.bins[ext]
+    local shebang = M.config.bins[ext]
 
     if shebang ~= nil then
         -- If no full path provided, use env
@@ -57,7 +57,7 @@ M.insert_shebang = function(ext)
 
         vim.api.nvim_put({shebang, ""}, "", false, true)
 
-        if config.executable then
+        if M.config.executable then
             vim.api.nvim_create_autocmd(
                 "BufWritePost",
                 { pattern = "*.*",
@@ -77,10 +77,10 @@ end
 
 M.setup = function(user_config)
     if user_config ~= nil then
-        config = vim.tbl_deep_extend("force", config, user_config)
+        M.config = vim.tbl_deep_extend("force", M.config, user_config)
     end
     
-    if config.automatic then
+    if M.config.automatic then
         vim.api.nvim_create_autocmd(
             "BufNewFile",
             { pattern = "*.*",
@@ -91,7 +91,7 @@ M.setup = function(user_config)
         )
     end
 
-    if config.command then
+    if M.config.command then
         vim.api.nvim_create_user_command(
             "Bang",
             function(opts) M.insert_shebang(opts.args) end,
