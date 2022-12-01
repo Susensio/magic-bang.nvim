@@ -1,7 +1,7 @@
 # shebang.nvim
 
 A simple Neovim plugin written in Lua that automatically inserts a shebang line
-when editing a new file.
+when editing a new file and make it executable.
 
 ## Installation
 
@@ -18,6 +18,19 @@ use {
     config = function() require("shebang").setup() end
 }
 ```
+
+
+## Usage
+
+If a file extension is present, the pluggin works automatically. A manual user command is provided `:Bang [<ext>]` with an optional extension argument, usefull when editing previously created files or source files without extension.
+```
+-- Try to set shebang based on extension
+:Bang
+
+-- Force specific shebang by declaring extension
+:Bang py
+```
+
 
 ## Customization
 
