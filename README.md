@@ -24,7 +24,7 @@ use {
 
 If a file extension is present, the pluggin works automatically. A manual user command is provided `:Bang [<ext>]` with an optional extension argument, usefull when editing previously created files or source files without extension.
 ```
--- Try to set shebang based on extension
+-- Try to set shebang based on extension, or insert default shebang
 :Bang
 
 -- Force specific shebang by declaring extension
@@ -39,8 +39,9 @@ You can set custom shebangs or override defaults in `setup` with `bins = { exten
 ```lua
 require("shebang").setup({
     bin = {
+        ksh = "/usr/bin/ksh",
         py = "python3.11",
-        ksh = "/usr/bin/ksh"
+        scala = nil
     }
 })
 ```
@@ -68,6 +69,7 @@ Default options are:
     automatic = true,       -- insert shebang on new file
     command = true,         -- define Bang user command
     executable = true,      -- make file executable on exit
+    default = "/bin/sh"     -- default shebang for `:Bang` without args
 }
 ```
 

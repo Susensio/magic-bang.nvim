@@ -1,6 +1,5 @@
 local M = {}
 
-local shebang_grp = vim.api.nvim_create_augroup("shebang", { clear = true })
 
 M.config = {
     bins = {
@@ -23,8 +22,10 @@ M.config = {
     automatic = true,
     command = true,
     executable = true,
+    default = "/bin/sh"
 }
 
+local shebang_grp = vim.api.nvim_create_augroup("shebang", { clear = true })
 
 local function exists_shebang()
     first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
@@ -33,17 +34,33 @@ local function exists_shebang()
     end
 end
 
+local function isempty(s)
+    return s == nil or s == ""
+end
+
 M.insert_shebang = function(ext)
     -- TODO maybe change to check for vim.bo.filetype
     -- Get extension from filename if not provided
-    if ext == nil or ext == "" then
+    if isempty(ext) then
         ext = vim.fn.expand("%:e")
     end
+    
+    local shebang = nil
+    -- Fallback to default if no extension
+    if isempty(ext) then
+        shebang = M.config.default
+    else
+        shebang = M.config.bins[ext]
+    end
 
-    local shebang = M.config.bins[ext]
+    if shebang == nil then
+        vim.api.nvim_err_writeln("Extension '"..ext.."' was not found in config. No shebang inserted.")
+        return 1
+    end
+    print("AFTER ERROR")
 
     if shebang ~= nil then
-        -- If no full path provided, use env
+        -- If no full path provided, append env
         if shebang:sub(1,1) ~= "/" then
             shebang = "/usr/bin/env " .. shebang
         end
@@ -76,9 +93,7 @@ end
 
 
 M.setup = function(user_config)
-    if user_config ~= nil then
-        M.config = vim.tbl_deep_extend("force", M.config, user_config)
-    end
+    M.config = vim.tbl_deep_extend("force", M.config, user_config or {})
     
     if M.config.automatic then
         vim.api.nvim_create_autocmd(
@@ -97,6 +112,15 @@ M.setup = function(user_config)
             function(opts) M.insert_shebang(opts.args) end,
             { desc = "Insert shebang and make executable",
               nargs = "?",
+              complete = function(arg_lead) 
+                  local exts = vim.tbl_keys(M.config.bins)
+                  table.sort(exts)
+                  return vim.tbl_filter(
+                      function(ext) return vim.startswith(ext, arg_lead) end,
+                      exts
+                  )
+
+              end,
             }
         )
     end
