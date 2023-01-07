@@ -1,4 +1,4 @@
-# shebang.nvim
+# shebang.nvim 
 
 A simple Neovim plugin written in Lua that automatically inserts a shebang line
 when editing a new file and makes it executable.
