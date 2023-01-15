@@ -90,7 +90,7 @@ local function get_shebang(ext)
   return shebang
 end
 
-local shebang_grp = vim.api.nvim_create_augroup("shebang", { clear = true })
+local magicbang_grp = vim.api.nvim_create_augroup("magic-bang", { clear = true })
 
 M.insert_shebang = function(shebang)
 
@@ -124,7 +124,7 @@ M.insert_shebang = function(shebang)
            end
          end,
          desc = "Make file executable if shebang still exists",
-         group = shebang_grp
+         group = magicbang_grp
         }
       )
     end
@@ -144,7 +144,7 @@ M.setup = function(user_config)
           M.insert_shebang(shebang)
         end,
        desc = "Auto insert shebang when needed",
-       group = shebang_grp
+       group = magicbang_grp
       }
     )
   end
