@@ -3,6 +3,10 @@
 A simple Neovim plugin written in pure Lua that automagically inserts a shebang line
 when needed and makes the file executable.
 
+It checks if the current file is in `$PATH` and reads its extension to insert the corresponding shebang.
+If no extension is present, default shebang is used.
+On exit, the file is made executable.
+
 ## Installation
 
 ### [packer](https://github.com/wbthomason/packer.nvim)
@@ -23,7 +27,7 @@ lua require("magic-bang").setup()
 
 ## Usage
 
-If a file extension is present, the pluggin works automatically. A manual user command is provided `:Bang [<ext>]` with an optional extension argument, usefull when editing previously created files or source files without extension.
+If a new file is in `$PATH`, the `:Bang` command is fired automatically. A manual user command is provided `:Bang [<binary>]` with an optional `binary` argument, usefull when editing previously created files or source files without extension.
 ```
 -- Try to set shebang based on extension, or insert default shebang
 :Bang
@@ -67,16 +71,20 @@ Default options are:
         tcl = "tclsh",
         tk = "wish",
     },
-    automatic = true,         -- insert shebang on new file
+    automatic = true,         -- insert shebang on new file when in $PATH
     command = true,           -- define Bang user command
     executable = true,        -- make file executable on exit
     default = "/bin/bash"     -- default shebang for `:Bang` without args
 }
 ```
 
+## Thanks
+
+To [samirettali](https://github.com/samirettali) for his [shebang.nvim](https://github.com/samirettali/shebang.nvim) that inspired this pluggin.
+
 ## FAQ
 
 **Q:** How does it differ from forked [samirettali/shebang.nvim](https://github.com/samirettali/shebang.nvim)?
 
-**A:** First, it only makes a file executable if the shebang is still present on exist. This prevent _false positives_. Second, a `:Bang` user command can manually add a shebang, helping with _false negatives_.
+**A:** First, it only makes a file executable if the shebang is still present on exit. This prevent _false positives_. Second, a `:Bang` user command can manually add a shebang, helping with _false negatives_.
 
