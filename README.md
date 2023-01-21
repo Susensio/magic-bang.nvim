@@ -3,9 +3,16 @@
 A simple Neovim plugin written in pure Lua that automagically inserts a shebang line
 when needed and makes the file executable.
 
+
+## How it works
+
 It checks if the current file is in `$PATH` and reads its extension to insert the corresponding shebang.
 If no extension is present, default shebang is used.
-On exit, the file is made executable.
+
+On exit, the file is made executable _only_ if the shebang is still present.
+
+`:Bang` command adds a shebang manually.
+
 
 ## Installation
 
