@@ -118,13 +118,13 @@ M.insert_shebang = function(shebang)
       vim.api.nvim_create_autocmd(
         "BufWritePost",
         { pattern = "*.*",
-         callback = function()
-           if exists_shebang() then
-             vim.cmd(":!chmod u+x %")
-           end
-         end,
-         desc = "Make file executable if shebang still exists",
-         group = magicbang_grp
+          callback = function()
+            if exists_shebang() then
+              vim.cmd(":!chmod u+x %")
+            end
+          end,
+          desc = "Make file executable if shebang still exists",
+          group = magicbang_grp
         }
       )
     end
