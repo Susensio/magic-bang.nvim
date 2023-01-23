@@ -1,8 +1,5 @@
 local M = {}
 
-local print = vim.api.nvim_echo
-local error = vim.api.nvim_err_writeln
-
 M.config = {
   bins = {
     awk = "awk",
@@ -67,24 +64,12 @@ local function get_shebang(ext)
     ext = vim.fn.expand("%:e")
   end
   
-  if ext == nil then
-    error("nil")
-  end
-  if ext == "" then
-    error("empty")
-  end
-
   -- Fallback to default if no extension
   local shebang = nil
   if isempty(ext) then
     shebang = M.config.default
   else
     shebang = M.config.bins[ext]
-    -- if shebang == nil then
-    --     -- TODO: if called from autocmd, no error should raise
-    --     vim.api.nvim_err_writeln("Extension '"..ext.."' was not found in config. No shebang inserted.")
-    --     return 1
-    -- end
   end
 
   return shebang
@@ -111,6 +96,7 @@ M.insert_shebang = function(shebang)
     
     -- Detect filetype
     vim.cmd("filetype detect")
+    -- new neovim syntax
     -- vim.filetype.match({ buf=vim.api.nvim_get_current_buf() })
 
     -- Make file executable on write
