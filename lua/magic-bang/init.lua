@@ -117,7 +117,7 @@ M.insert_shebang = function(shebang)
     if M.config.executable then
       vim.api.nvim_create_autocmd(
         "BufWritePost",
-        { pattern = "*.*",
+        { pattern = "*",
           callback = function()
             if exists_shebang() then
               vim.cmd(":!chmod u+x %")
@@ -138,7 +138,7 @@ M.setup = function(user_config)
   if M.config.automatic and dirname_in_path() then
     vim.api.nvim_create_autocmd(
       "BufNewFile",
-      { pattern = "*.*",
+      { pattern = "*",
        callback = function() 
           shebang = get_shebang()
           M.insert_shebang(shebang)
