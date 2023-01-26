@@ -85,9 +85,10 @@ Default options are:
 }
 ```
 
-## Thanks
+## Acknowledgments
 
 To [samirettali](https://github.com/samirettali) for his [shebang.nvim](https://github.com/samirettali/shebang.nvim) that inspired this pluggin.
+
 
 ## FAQ
 
