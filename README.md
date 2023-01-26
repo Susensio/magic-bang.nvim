@@ -1,4 +1,4 @@
-# 🪄#! magic-bang.nvim 
+# 🪄 #Magic Bang! 
 
 A simple Neovim plugin written in pure Lua that automagically inserts a shebang line
 when needed and makes the file executable.
