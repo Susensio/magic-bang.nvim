@@ -153,8 +153,9 @@ M.setup = function(user_config)
     vim.api.nvim_create_user_command(
       "Bang",
       function(opts)
-        bang = opts.args
-        if isempty(bang) then
+        print(opts.args)
+        shebang = opts.args
+        if isempty(shebang) then
           shebang = get_shebang()
         end
         M.insert_shebang(shebang)
