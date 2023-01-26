@@ -6,6 +6,9 @@ when needed and makes the file executable.
 
 ## How it works
 
+![sample](https://user-images.githubusercontent.com/11474625/214789323-bbb3e8b7-d8c1-4627-a556-833c426dd3d3.gif)
+
+
 It checks if the current file is in `$PATH` and reads its extension to insert the corresponding shebang.
 If no extension is present, default shebang is used.
 
