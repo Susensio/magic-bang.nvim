@@ -21,13 +21,11 @@ On exit, the file is made executable _only_ if the shebang is still present.
 
 ### [lazy](https://github.com/folke/lazy.nvim) with lazyloading
 ```lua
-use {
-  {
-    "susensio/magic-bang.nvim",
-    config = true,
-    event = "BufNewFile",
-    cmd = "Bang",
-  }
+{
+  "susensio/magic-bang.nvim",
+  config = true,
+  event = "BufNewFile",
+  cmd = "Bang",
 }
 ```
 
