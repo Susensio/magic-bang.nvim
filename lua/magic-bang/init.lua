@@ -45,14 +45,14 @@ local function filter(list, pattern)
 end
 
 local function dirname_in_path()
-  paths = vim.split(vim.env.PATH, ':')
+  local paths = vim.split(vim.env.PATH, ':')
   -- TODO: this may not always work in older nvim versions
-  dirname = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+  local dirname = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
   return vim.tbl_contains(paths, dirname)
 end
 
 local function exists_shebang()
-  first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+  local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
   if first_line:sub(1,2) == "#!" then
     return true
   end
@@ -63,7 +63,7 @@ local function get_shebang(ext)
   if isempty(ext) then
     ext = vim.fn.expand("%:e")
   end
-  
+
   -- Fallback to default if no extension
   local shebang = nil
   if isempty(ext) then
@@ -93,7 +93,7 @@ M.insert_shebang = function(shebang)
     end
 
     vim.api.nvim_put({shebang, ""}, "", false, true)
-    
+
     -- Detect filetype
     vim.cmd("filetype detect")
     -- new neovim syntax
@@ -106,7 +106,7 @@ M.insert_shebang = function(shebang)
         { pattern = "*",
           callback = function()
             if exists_shebang() then
-              vim.cmd(":!chmod u+x %")
+              vim.cmd("silent !chmod u+x %")
             end
           end,
           desc = "Make file executable if shebang still exists",
@@ -120,13 +120,13 @@ end
 
 M.setup = function(user_config)
   M.config = vim.tbl_deep_extend("force", M.config, user_config or {})
-  
+
   if M.config.automatic and dirname_in_path() then
     vim.api.nvim_create_autocmd(
       "BufNewFile",
       { pattern = "*",
-       callback = function() 
-          shebang = get_shebang()
+       callback = function()
+          local shebang = get_shebang()
           M.insert_shebang(shebang)
         end,
        desc = "Auto insert shebang when needed",
@@ -139,7 +139,7 @@ M.setup = function(user_config)
     vim.api.nvim_create_user_command(
       "Bang",
       function(opts)
-        shebang = opts.args
+        local shebang = opts.args
         if isempty(shebang) then
           shebang = get_shebang()
         end
@@ -147,7 +147,7 @@ M.setup = function(user_config)
       end,
       { desc = "Insert shebang and make executable",
        nargs = "?",
-       complete = function(arg_lead) 
+       complete = function(arg_lead)
          local bangs = vim.tbl_values(M.config.bins)
          sort(bangs)
          return filter(bangs, arg_lead)
