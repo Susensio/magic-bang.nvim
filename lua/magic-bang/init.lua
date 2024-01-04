@@ -45,14 +45,14 @@ local function filter(list, pattern)
 end
 
 local function dirname_in_path()
-  paths = vim.split(vim.env.PATH, ':')
+  local paths = vim.split(vim.env.PATH, ':')
   -- TODO: this may not always work in older nvim versions
-  dirname = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+  local dirname = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
   return vim.tbl_contains(paths, dirname)
 end
 
 local function exists_shebang()
-  first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+  local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
   if first_line:sub(1,2) == "#!" then
     return true
   end
@@ -126,7 +126,7 @@ M.setup = function(user_config)
       "BufNewFile",
       { pattern = "*",
        callback = function()
-          shebang = get_shebang()
+          local shebang = get_shebang()
           M.insert_shebang(shebang)
         end,
        desc = "Auto insert shebang when needed",
@@ -139,7 +139,7 @@ M.setup = function(user_config)
     vim.api.nvim_create_user_command(
       "Bang",
       function(opts)
-        shebang = opts.args
+        local shebang = opts.args
         if isempty(shebang) then
           shebang = get_shebang()
         end
