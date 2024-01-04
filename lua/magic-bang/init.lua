@@ -63,7 +63,7 @@ local function get_shebang(ext)
   if isempty(ext) then
     ext = vim.fn.expand("%:e")
   end
-  
+
   -- Fallback to default if no extension
   local shebang = nil
   if isempty(ext) then
@@ -93,7 +93,7 @@ M.insert_shebang = function(shebang)
     end
 
     vim.api.nvim_put({shebang, ""}, "", false, true)
-    
+
     -- Detect filetype
     vim.cmd("filetype detect")
     -- new neovim syntax
@@ -106,7 +106,7 @@ M.insert_shebang = function(shebang)
         { pattern = "*",
           callback = function()
             if exists_shebang() then
-              vim.cmd(":!chmod u+x %")
+              vim.cmd("silent !chmod u+x %")
             end
           end,
           desc = "Make file executable if shebang still exists",
@@ -120,12 +120,12 @@ end
 
 M.setup = function(user_config)
   M.config = vim.tbl_deep_extend("force", M.config, user_config or {})
-  
+
   if M.config.automatic and dirname_in_path() then
     vim.api.nvim_create_autocmd(
       "BufNewFile",
       { pattern = "*",
-       callback = function() 
+       callback = function()
           shebang = get_shebang()
           M.insert_shebang(shebang)
         end,
@@ -147,7 +147,7 @@ M.setup = function(user_config)
       end,
       { desc = "Insert shebang and make executable",
        nargs = "?",
-       complete = function(arg_lead) 
+       complete = function(arg_lead)
          local bangs = vim.tbl_values(M.config.bins)
          sort(bangs)
          return filter(bangs, arg_lead)
